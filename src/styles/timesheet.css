@@ -1,0 +1,121 @@
+.timesheet {
+    height: 100%;
+    width:85vw; 
+    margin-left:15%;
+    
+  }
+  .MainHead {
+    color: #19105B;
+   
+  }
+
+  .MainHeadDetails {
+    display: flex;
+    flex-direction:row;
+    flex-wrap: stretch;
+  }
+ 
+  .MainBands {
+    background-color:#19105B;
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    color:#fff5f5;
+    display:flex;
+    align-items: center;
+  
+    border:1px;
+  } 
+  .MainBands p{
+    padding: 5px;
+  }
+  .MainTable {
+  border: none;
+    width:100%;
+  }
+
+  .TableHead {
+    background-color:#ebe1e4;
+    color:#19105B;
+    font-size: 12px;
+    width:100%;
+  }
+ 
+  .TableHead
+  > th {
+    padding: 10px;
+  }
+ 
+  select { 
+    min-width: 100px; 
+    background-color: #fff5f5; 
+    width: 100%; 
+    font-size:  1rem; 
+    padding:  0.675em 0.6em  0.675em 1em; 
+    border: 1px #caced1; 
+    border-radius:  0.25rem; 
+    color:  #747272; 
+    cursor: pointer; 
+  }
+  .comments { 
+    min-width: 50px; 
+    background-color:  #fff5f5; 
+    width:  100%; 
+    font-size: 1rem; 
+    padding:  0.675em 0.6em 0.675em 1em; 
+    border: 1px #caced1; 
+    border-radius: 0.25rem; 
+    color:  #747272; 
+    cursor:  pointer; 
+  }
+
+  input {
+     min-width: 30px; 
+    background-color:  #fff5f5; 
+    width:100%; 
+    font-size: 1rem; 
+    padding:  0.675em 0.6em 0.675em 1em; 
+    border: 1px #caced1;
+     border-radius:  0.25rem; 
+    color: #747272; 
+    cursor: pointer; 
+  }
+
+  .plus {
+     font-size: 40px; 
+    color: #747272; 
+    padding-bottom:  10px; 
+     cursor:pointer;
+  }
+ 
+  .projectType {
+     width: 15%;
+     color:  #747272; 
+    font-size: 15px; 
+    padding: 10px;
+ 
+  }
+ 
+  .MainSubmission > button { 
+    float: right;
+    margin: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+ 
+  }
+ 
+  .save {
+    background-color:#19105B;
+    color:   white;
+    width:   110px;
+  }
+  .submit {  
+    background-color:  #FF6196 !important; 
+    color:   white; 
+    width:   110px; 
+  }
+  .drop{
+    cursor: pointer;
+  }
