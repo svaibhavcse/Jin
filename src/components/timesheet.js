@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../styles/timesheet.css";
 import { IoArrowForward } from "react-icons/io5";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { useEffect } from "react";
 
 function Timesheet() {
   const [drop, setDrop] = useState(false);
@@ -28,13 +29,13 @@ function Timesheet() {
   };
 
   const handleInputChange = (type, id, field, value) => {
+    
     if (type === 'BAU') {
       const updatedTasks = tasks.map(task => {
         if (task.id === id) {
          let innerUpdate= { ...task, [field]: value };
          if(field.length ===3){
-          console.log(field.length)
-          innerUpdate = {...innerUpdate,["tot"]:task.tot+parseInt(value)}
+          innerUpdate = {...innerUpdate,["tot"]:parseInt(task.tot)+parseInt(value)} 
          }
          return innerUpdate
         }
@@ -44,16 +45,40 @@ function Timesheet() {
     } else if (type === 'Sales') {
       const updatedSales = sales.map(sale => {
         if (sale.id === id) {
-          return { ...sale, [field]: value };
+          let innersale= { ...sale, [field]: value };
+          if(field.length === 3){
+            innersale ={...innersale,["tot"]:sale.tot + parseInt(value)}
+          }
+          return innersale;
         }
         return sale;
       });
       setSales(updatedSales);
     }
   };
+  useEffect(() => {
+    const updatedSum = { mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0 };
+    tasks.forEach(task => {
+      Object.keys(updatedSum).forEach(day => {
+        updatedSum[day] += parseInt(task[day]) || 0;
+      });
+    });
+    sales.forEach(sale => {
+      Object.keys(updatedSum).forEach(day => {
+        updatedSum[day] += parseInt(sale[day]) || 0;
+      });
+    });
+    setSum(updatedSum);
+    for (const day in sum) {
+      total += sum[day];
+      console.log(total);
+    }
+  },[tasks,sales]);
+  
   //submit
   const handelSubmit=()=>{
-    console.log(tasks)
+    //console.log(tasks,sales) 
+    console.log(sum); 
   }
 
   return (
@@ -205,7 +230,7 @@ function Timesheet() {
                 <input type="number" min="0" max="24" onChange={(e) => handleInputChange('Sales', sale.id, 'sun', e.target.value)} />
               </td>
               <td>
-                <p>{}</p>
+                <p>{sale.tot}</p>
               </td>
               <td className="plus" onClick={() => handleAddTask('Sales')}> +</td>
               {index !== 0 && <td className="plus" onClick={() => handleRemoveTask('Sales', sale.id)}> - </td>}
@@ -217,13 +242,13 @@ function Timesheet() {
             <td></td>
             <td></td>
             <td></td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
+            <td>{sum.mon}</td>
+            <td>{sum.tue}</td>
+            <td>{sum.wed}</td>
+            <td>{sum.thu}</td>
+            <td>{sum.fri}</td>
+            <td>{sum.sat}</td>
+            <td>{sum.sun}</td>
             <td>{total}</td>
             <td></td>
           </tr>
