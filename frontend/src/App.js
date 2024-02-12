@@ -14,7 +14,7 @@ function App() {
        <BrowserRouter>
        <Sidebar/>
 <Routes>
-  <Route path="/timesheet" element={<Timesheet/>}/>
+  <Route path="/" element={<Timesheet/>}/>
 </Routes>
        
        </BrowserRouter>

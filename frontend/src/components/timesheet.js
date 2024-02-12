@@ -1,22 +1,23 @@
-import React, { useRef, useState } from "react";
-import "../styles/timesheet.css";
+import React, { useState, useEffect } from "react";
 import { IoArrowForward } from "react-icons/io5";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { useEffect } from "react";
+import { IoIosArrowDown , IoIosArrowUp} from "react-icons/io";
+import axios from 'axios';
+import "../styles/timesheet.css";
 
 function Timesheet() {
   const [drop, setDrop] = useState(false);
-  const [tasks, setTasks] = useState([{ id: 1, projectName: '', task: '', comment: '', mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0,tot: 0}]);
-  const [sales, setSales] = useState([{ id: 1, projectName: '', task: '', comment: '', mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0 ,tot:0}]);
-  const [sum,setSum] = useState([{mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0 }])
+  const [tasks, setTasks] = useState([{ id: 1, projectName: '', task: '', comment: '', mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0, tot: 0 }]);
+  const [sales, setSales] = useState([{ id: 1, projectName: '', task: '', comment: '', mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0, tot: 0 }]);
+  const [sum, setSum] = useState({ mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0 });
   let total = 0;
+
   const handleAddTask = (type) => {
     if (type === 'BAU') {
       const newId = tasks[tasks.length - 1].id + 1;
-      setTasks([...tasks, { id: newId, projectName: '', task: '', comment: '', mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0,tot: 0}]);
+      setTasks([...tasks, { id: newId, projectName: '', task: '', comment: '', mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0, tot: 0 }]);
     } else if (type === 'Sales') {
       const newId = sales[sales.length - 1].id + 1;
-      setSales([...sales, { id: newId, projectName: '', task: '', comment: '', mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0 ,tot:0}]);
+      setSales([...sales, { id: newId, projectName: '', task: '', comment: '', mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0, tot: 0 }]);
     }
   };
 
@@ -32,11 +33,11 @@ function Timesheet() {
     if (type === 'BAU') {
       const updatedTasks = tasks.map(task => {
         if (task.id === id) {
-         let innerUpdate= { ...task, [field]: value };
-         if(field.length ===3){
-          innerUpdate = {...innerUpdate,["tot"]:parseInt(task.tot)+parseInt(value)} 
-         }
-         return innerUpdate
+          let innerUpdate = { ...task, [field]: value };
+          if (field.length === 3) {
+            innerUpdate = { ...innerUpdate, ["tot"]: parseInt(task.tot) + parseInt(value) }
+          }
+          return innerUpdate;
         }
         return task;
       });
@@ -44,10 +45,9 @@ function Timesheet() {
     } else if (type === 'Sales') {
       const updatedSales = sales.map(sale => {
         if (sale.id === id) {
-          let innersale= { ...sale, [field]: value };
-          if(field.length === 3){
-            innersale ={...innersale,["tot"]:sale.tot + parseInt(value)}
-            
+          let innersale = { ...sale, [field]: value };
+          if (field.length === 3) {
+            innersale = { ...innersale, ["tot"]: sale.tot + parseInt(value) }
           }
           return innersale;
         }
@@ -56,6 +56,7 @@ function Timesheet() {
       setSales(updatedSales);
     }
   };
+
   useEffect(() => {
     const updatedSum = { mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, sun: 0 };
     tasks.forEach(task => {
@@ -69,16 +70,23 @@ function Timesheet() {
       });
     });
     setSum(updatedSum);
-    
-  },[tasks,sales]);
-  //grand sum
+  }, [tasks, sales]);
+
+  // Grand total calculation
   for (const day in sum) {
     total += sum[day];
   }
-  //submit
-  const handelSubmit=()=>{
-    //console.log(tasks,sales)
-  }
+
+  const handleSubmit = async () => {
+    try {
+      // Make a POST request to send tasks and sales data to the backend
+      await axios.post('http://localhost:4000/storeData', { tasks, sales });
+      alert('Data submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      alert('An error occurred while submitting data. Please try again.');
+    }
+  };
 
   return (
     <div className="timesheet">
@@ -153,13 +161,14 @@ function Timesheet() {
               <td>
                 <select onChange={(e) => handleInputChange('BAU', task.id, 'task', e.target.value)}>
                   <option value="">Task</option>
+                  <option> Task_1</option>
                 </select>
               </td>
               <td>
                 <input className="comments" onChange={(e) => handleInputChange('BAU', task.id, 'comment', e.target.value)} />
               </td>
               <td>
-                <input type="number" min="0" max="24" onChange={(e) => handleInputChange('BAU', task.id, 'mon', parseInt(e.target.value,10))} />
+                <input type="number" min="0" max="24" onChange={(e) => handleInputChange('BAU', task.id, 'mon', parseInt(e.target.value, 10))} />
               </td>
               <td>
                 <input type="number" min="0" max="24" onChange={(e) => handleInputChange('BAU', task.id, 'tue', e.target.value)} />
@@ -197,11 +206,13 @@ function Timesheet() {
               <td>
                 <select onChange={(e) => handleInputChange('Sales', sale.id, 'projectName', e.target.value)}>
                   <option value="">Project</option>
+                  <option> Project_1</option>
                 </select>
               </td>
               <td>
                 <select onChange={(e) => handleInputChange('Sales', sale.id, 'task', e.target.value)}>
                   <option value="">Task</option>
+                  <option>task - 1</option>
                 </select>
               </td>
               <td>
@@ -261,7 +272,7 @@ function Timesheet() {
       </table>
 
       <div className="MainSubmission">
-        <button className="submit" onClick={()=>{handelSubmit()}}>SUBMIT <IoArrowForward /></button>
+        <button className="submit" onClick={handleSubmit}>SUBMIT <IoArrowForward /></button>
         <button className="save">SAVE</button>
       </div>
     </div>
